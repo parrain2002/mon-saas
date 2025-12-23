@@ -1,0 +1,36 @@
+{
+  "compilerOptions": {
+    "outDir": "./dist/out-tsc",
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    
+    // Configurations React/JSX
+    "jsx": "react-jsx", // 👈 Crucial: Active le support JSX de React
+    "allowJs": true,    // 👈 Permet l'inclusion de fichiers .js et .jsx
+    "resolveJsonModule": true, // Permet l'importation de fichiers .json
+    "noEmit": true, // Ne pas générer de fichiers JS (laisse Webpack/Vite s'en charger)
+    
+    // Assurez-vous que les modules sont bien résolus
+    "module": "esnext",
+    "moduleResolution": "node",
+    "target": "es2020",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "skipLibCheck": true,
+    
+    // Chemin de base pour les modules
+    "baseUrl": "." 
+  },
+  
+  // 👈 Inclure les extensions de fichiers nécessaires à la compilation
+  "include": [
+    "**/*.ts",
+    "**/*.tsx",
+    "**/*.js",
+    "**/*.jsx"
+  ],
+  
+  "exclude": [
+    "node_modules"
+  ]
+}

@@ -1,0 +1,42 @@
+/* =========================
+   ANIMATIONS ACCESSIBLES
+   ========================= */
+
+/* Animation douce d'apparition */
+@keyframes fadeSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Appliquée aux pages */
+.page-animate {
+  animation: fadeSlideUp 0.6s ease-out both;
+}
+
+/* Appliquée aux cartes */
+.card-animate {
+  animation: fadeSlideUp 0.5s ease-out both;
+}
+
+/* Décalage progressif (stagger effect) */
+.card-animate:nth-child(1) { animation-delay: 0.05s; }
+.card-animate:nth-child(2) { animation-delay: 0.1s; }
+.card-animate:nth-child(3) { animation-delay: 0.15s; }
+.card-animate:nth-child(4) { animation-delay: 0.2s; }
+.card-animate:nth-child(5) { animation-delay: 0.25s; }
+
+/* =========================
+   ACCESSIBILITÉ : MOTION
+   ========================= */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
+}

@@ -1,0 +1,33 @@
+.header {
+  width: 100%;
+  padding: 16px 26px;
+  background: #fff;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: var(--shadow);
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.header-name {
+  font-weight: 600;
+  font-size: 16px;
+  color: var(--text-dark);
+}
+
+.header-links a {
+  margin-right: 16px;
+  text-decoration: none;
+  color: var(--text-light);
+  font-weight: 500;
+}
+
+.header-links a:hover {
+  color: var(--primary);
+}
