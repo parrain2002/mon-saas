@@ -7,17 +7,21 @@ export default function NotificationBadge() {
   const [count, setCount] = useState(0);
   const nav = useNavigate();
 
-  const token = localStorage.getItem("token");
-  if (!token) return null; // ⛔ Empêche le composant de s'exécuter avant login
+  // RÉCUPÉRATION DYNAMIQUE DE L'URL
+  const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
 
+  const token = localStorage.getItem("token");
+  
   useEffect(() => {
+    if (!token) return;
+
     // 1️⃣ Récupérer le nombre non lus
     getUnreadCount(token)
       .then((res) => setCount(res.count))
       .catch(() => setCount(0));
 
-    // 2️⃣ Connexion Socket.IO AVEC token
-    const socket = io("http://localhost:3000", {
+    // 2️⃣ Connexion Socket.IO avec URL dynamique
+    const socket = io(API_URL, {
       extraHeaders: {
         Authorization: `Bearer ${token}`,
       },
@@ -37,7 +41,9 @@ export default function NotificationBadge() {
     });
 
     return () => socket.disconnect();
-  }, [token]);
+  }, [token, API_URL]);
+
+  if (!token) return null;
 
   return (
     <button onClick={() => nav("/notifications")} aria-label="Notifications">

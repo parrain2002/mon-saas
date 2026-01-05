@@ -1,6 +1,8 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:3000/dashboard";
+// URL dynamique : utilise Render sur Netlify, sinon localhost
+const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
+const API_URL = `${BASE_URL}/dashboard`;
 
 export const getDashboardStats = async (token) => {
   return axios.get(API_URL, {

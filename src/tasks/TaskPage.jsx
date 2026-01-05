@@ -20,6 +20,9 @@ export default function TaskPage() {
   const token = localStorage.getItem("token");
   const role = localStorage.getItem("role");
 
+  // RÉCUPÉRATION DE L'URL DEPUIS NETLIFY (OU LOCALHOST)
+  const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
+
   useEffect(() => {
     if (!token) {
       nav("/login");
@@ -36,31 +39,29 @@ export default function TaskPage() {
         setProjects(p);
       } catch (err) {
         console.error("load tasks/projects", err);
-        // redirect on auth error
         if (err?.response?.status === 401) nav("/login");
       } finally {
         if (mounted) setLoading(false);
       }
     })();
 
-    // socket for realtime: incrementally update list on new notifications/tasks if needed
-    const socket = io("http://localhost:3000", {
+    // CONFIGURATION SOCKET.IO DYNAMIQUE
+    const socket = io(API_URL, {
       auth: { token: `Bearer ${token}` },
       transports: ["websocket"],
     });
 
     socket.on("connect", () => {
-      // console.log("socket connected - tasks page");
+       console.log("Connecté au serveur temps réel sur :", API_URL);
     });
 
     socket.on("newNotification", (payload) => {
-      // payload may contain task info; conservative approach: refetch tasks
       (async () => {
         try {
           const refreshed = await getTasks(token);
-          setTasks(refreshed);
+          if (mounted) setTasks(refreshed);
         } catch (e) {
-          // ignore
+          console.error("Erreur refresh socket", e);
         }
       })();
     });
@@ -69,7 +70,7 @@ export default function TaskPage() {
       mounted = false;
       socket.disconnect();
     };
-  }, []);
+  }, [token, nav, API_URL]);
 
   const handleCreate = async (data) => {
     try {

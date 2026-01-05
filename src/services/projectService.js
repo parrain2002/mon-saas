@@ -1,6 +1,8 @@
 // src/services/projectService.js
 
-const API_URL = "http://localhost:3000/projects";
+// Utilise l'URL de Render sur Netlify, sinon localhost par défaut
+const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:3000";
+const API_URL = `${API_BASE}/projects`;
 
 export async function getProjects(token) {
   const res = await fetch(API_URL, {

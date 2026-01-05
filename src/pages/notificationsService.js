@@ -1,7 +1,9 @@
 // src/pages/notificationsService.js
 import axios from "axios";
 
-const API_BASE = "http://localhost:3000/notifications";
+// RÉCUPÉRATION DE L'URL DEPUIS LES VARIABLES D'ENVIRONNEMENT
+const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
+const API_BASE = `${BASE_URL}/notifications`;
 
 function authHeader(token) {
   return {

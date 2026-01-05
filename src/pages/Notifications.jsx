@@ -14,6 +14,9 @@ export default function Notifications() {
   const socketRef = useRef(null);
   const nav = useNavigate();
 
+  // RÉCUPÉRATION DYNAMIQUE DE L'URL (Render sur Netlify, sinon localhost)
+  const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
+
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) {
@@ -21,20 +24,22 @@ export default function Notifications() {
       return;
     }
 
-    // --- 1️⃣ Récupération des notifications ---
+    let mounted = true;
+
+    // --- 1️⃣ Récupération des notifications via API ---
     (async () => {
       try {
         const data = await getUserNotifications(token);
-        setNotifications(data);
+        if (mounted) setNotifications(data);
       } catch (err) {
         console.error("fetch notifications error", err);
       } finally {
-        setLoading(false);
+        if (mounted) setLoading(false);
       }
     })();
 
-    // --- 2️⃣ WebSocket Correctement Authentifié ---
-    const socket = io("http://localhost:3000", {
+    // --- 2️⃣ Connexion WebSocket (Socket.io) ---
+    const socket = io(API_URL, {
       extraHeaders: {
         Authorization: `Bearer ${token}`,
       },
@@ -61,10 +66,12 @@ export default function Notifications() {
       console.error("Socket connect error:", err);
     });
 
+    // Nettoyage à la fermeture du composant
     return () => {
+      mounted = false;
       socket.disconnect();
     };
-  }, []);
+  }, [nav, API_URL]);
 
   const handleMarkAsRead = async (id) => {
     const token = localStorage.getItem("token");
@@ -110,13 +117,15 @@ export default function Notifications() {
               <small>{new Date(n.createdAt).toLocaleString()}</small>
             </div>
 
-            <div>
+            <div style={{ marginTop: 5 }}>
               {!n.isRead && (
-                <button onClick={() => handleMarkAsRead(n.id)}>
+                <button onClick={() => handleMarkAsRead(n.id)} style={{ marginRight: 10 }}>
                   Marquer lu
                 </button>
               )}
-              <button onClick={() => handleDelete(n.id)}>Supprimer</button>
+              <button onClick={() => handleDelete(n.id)} style={{ color: 'red' }}>
+                Supprimer
+              </button>
             </div>
           </li>
         ))}
